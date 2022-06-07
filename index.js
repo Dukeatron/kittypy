@@ -1,11 +1,14 @@
+// Important Variables
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, Intents, PartialWebhookMixin } = require('discord.js');
 const { token } = require('./config.json');
 const {ReactionRole} = require('discordjs-reaction-role')
 
+// Client
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.GUILD_MEMBERS], partials: ["MESSAGE", "REACTION"] });
 
+// Command Handler
 client.commands = new Collection();
 const commandsPath = path.join(__dirname, 'commands');
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
@@ -16,10 +19,7 @@ for (const file of commandFiles) {
 	client.commands.set(command.data.name, command);
 }
 
-client.on('messageDelete', (message) => {
-	message.channel.send("someone deleted a message here :flushed:")
-})
-
+// Message Events
 client.once('ready', () => {
 	console.log('Ready!');
 	client.user.setActivity(`Kitty draw!`, {type: "WATCHING"})
@@ -51,10 +51,7 @@ client.on('guildMemberAdd', (member) => {
 	member.guild.channels.cache.get(welcomeChannel).send(`<@${member.id}>`)
 })
 
-const rr = new ReactionRole(client, [
-	{messageid: "982153236402303018", reaction: "🐱", roleId: "981589911939473458"}
-])
-
+// Interaction
 client.on('interactionCreate', async interaction => {
 	if (!interaction.isCommand()) return;
 
@@ -70,4 +67,5 @@ client.on('interactionCreate', async interaction => {
 	}
 });
 
+// Login
 client.login(token);
