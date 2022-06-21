@@ -1,5 +1,5 @@
 config.json
 node_modules
 .vscode
-.DS_Store
-tests
+.DS_Store/
+tests/
